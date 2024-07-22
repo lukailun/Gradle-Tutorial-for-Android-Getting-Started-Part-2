@@ -11,4 +11,6 @@
     <string name="followers">Followers</string>
     <string name="recent_photos">Recent photos</string>
     <string name="restriction">More photos are available in the premium application</string>
+    <string name="free_app_message">Hi! You\'re using the free version of the application</string>
+    <string name="paid_app_message">Hi! Congratulations on buying the premium version of the application</string>
 </resources>

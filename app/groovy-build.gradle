@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 plugins {
     alias libs.plugins.android.application
     alias libs.plugins.kotlin.android
@@ -23,6 +25,50 @@ android {
         jvmToolchain(17)
     }
 }
+
+abstract class AddCurrentDateTask extends DefaultTask {
+    @Input
+    abstract Property<String> getBuildFlavor()
+
+    @Input
+    abstract Property<String> getBuildType()
+
+    @TaskAction
+    void taskAction() {
+        String oldFileName = "app-${buildFlavor.get()}-${buildType.get()}.apk"
+        String sourcePath = "${project.buildDir}/outputs/apk/${buildFlavor.get()}/${buildType.get()}/"
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date())
+        project.copy {
+            from(sourcePath + oldFileName)
+            into(sourcePath)
+            rename { date + "_" + oldFileName  }
+        }
+    }
+}
+
+androidComponents {
+    onVariants(selector().all(), { variant ->
+        TaskProvider addCurrentDateTask = project.tasks.register(
+                variant.getName() + "AddCurrentDateTask",
+                AddCurrentDateTask.class
+        ) {
+            buildType.set(variant.getBuildType())
+            buildFlavor.set(variant.getFlavorName())
+        }
+
+        String capitalizedVariantName = variant.getName()
+                .substring(0, 1)
+                .toUpperCase()
+                .concat(variant.getName().substring(1))
+
+        String assembleTaskName = "assemble$capitalizedVariantName"
+
+        project.tasks.matching { it.name == assembleTaskName }.configureEach {
+            finalizedBy(addCurrentDateTask)
+        }
+    })
+}
+
 
 dependencies {
     implementation fileTree(include: ["*.jar"], dir: "libs")

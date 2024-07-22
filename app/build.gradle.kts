@@ -1,4 +1,6 @@
-@file:Suppress("UnstableApiUsage")
+import org.gradle.configurationcache.extensions.capitalized
+import java.text.SimpleDateFormat
+import java.util.Date
 
 plugins {
     alias(libs.plugins.android.application)
@@ -55,6 +57,43 @@ android {
         jvmToolchain(17)
     }
 }
+
+abstract class AddCurrentDateTask: DefaultTask() {
+    @get:Input
+    abstract val buildFlavor: Property<String>
+
+    @get:Input
+    abstract val buildType: Property<String>
+
+    @TaskAction
+    fun taskAction() {
+        val oldFileName = "app-${buildFlavor.get()}-${buildType.get()}.apk"
+        val sourcePath = "${project.buildDir}/outputs/apk/${buildFlavor.get()}/${buildType.get()}/"
+        val date = SimpleDateFormat("dd-MM-yyyy").format(Date())
+        project.copy {
+            from(sourcePath + oldFileName)
+            into(sourcePath)
+            rename { date + "_" + oldFileName  }
+        }
+    }
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        val addCurrentDateTask = project.tasks.register(
+            name = variant.name + "AddCurrentDateTask",
+            type = AddCurrentDateTask::class
+        ) {
+            buildFlavor.set(variant.flavorName.orEmpty())
+            buildType.set(variant.buildType)
+        }
+        val assembleTaskName = "assemble${variant.name.capitalized()}"
+        project.tasks.matching { it.name == assembleTaskName }.configureEach {
+            finalizedBy(addCurrentDateTask)
+        }
+    }
+}
+
 
 dependencies {
     implementation(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
