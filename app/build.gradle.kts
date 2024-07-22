@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
+apply<AddCurrentDatePlugin>()
+
 android {
     namespace = "com.kodeco.socializify"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -32,7 +34,8 @@ android {
         release {
             signingConfig = signingConfigs.getByName("release")
         }
-        debug { }
+        debug {
+        }
     }
 
     flavorDimensions.add("appMode")
@@ -78,22 +81,43 @@ abstract class AddCurrentDateTask: DefaultTask() {
     }
 }
 
-androidComponents {
-    onVariants(selector().all()) { variant ->
-        val addCurrentDateTask = project.tasks.register(
-            name = variant.name + "AddCurrentDateTask",
-            type = AddCurrentDateTask::class
-        ) {
-            buildFlavor.set(variant.flavorName.orEmpty())
-            buildType.set(variant.buildType)
-        }
-        val assembleTaskName = "assemble${variant.name.capitalized()}"
-        project.tasks.matching { it.name == assembleTaskName }.configureEach {
-            finalizedBy(addCurrentDateTask)
+class AddCurrentDatePlugin: Plugin<Project> {
+    override fun apply(target: Project) {
+        target.androidComponents {
+            onVariants(selector().all()) { variant ->
+                val addCurrentDateTask = target.tasks.register(
+                    name = variant.name + "AddCurrentDateTask",
+                    type = AddCurrentDateTask::class
+                ) {
+                    buildFlavor.set(variant.flavorName.orEmpty())
+                    buildType.set(variant.buildType)
+                }
+
+                val assembleTaskName = "assemble${variant.name.capitalized()}"
+
+                target.tasks.matching { it.name == assembleTaskName }.configureEach {
+                    finalizedBy(addCurrentDateTask)
+                }
+            }
         }
     }
 }
 
+//androidComponents {
+//    onVariants(selector().all()) { variant ->
+//        val addCurrentDateTask = project.tasks.register(
+//            name = variant.name + "AddCurrentDateTask",
+//            type = AddCurrentDateTask::class
+//        ) {
+//            buildFlavor.set(variant.flavorName.orEmpty())
+//            buildType.set(variant.buildType)
+//        }
+//        val assembleTaskName = "assemble${variant.name.capitalized()}"
+//        project.tasks.matching { it.name == assembleTaskName }.configureEach {
+//            finalizedBy(addCurrentDateTask)
+//        }
+//    }
+//}
 
 dependencies {
     implementation(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))

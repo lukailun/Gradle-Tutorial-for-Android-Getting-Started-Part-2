@@ -5,6 +5,8 @@ plugins {
     alias libs.plugins.kotlin.android
 }
 
+apply plugin: AddCurrentDatePlugin
+
 android {
     namespace "com.kodeco.socializify"
     compileSdk libs.versions.compileSdk.get().toInteger()
@@ -15,6 +17,38 @@ android {
         targetSdk libs.versions.targetSdk.get().toInteger()
         versionCode libs.versions.versionCode.get().toInteger()
         versionName libs.versions.versionName.get()
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("path to your keystore file")
+            storePassword "your store password"
+            keyAlias "your key alias"
+            keyPassword "your key password"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+        debug {
+        }
+    }
+
+    flavorDimensions = ["appMode"]
+
+    productFlavors {
+        free {
+            dimension "appMode"
+            applicationIdSuffix ".free"
+            manifestPlaceholders.appName = "@string/app_name_free"
+        }
+        paid {
+            dimension "appMode"
+            applicationIdSuffix ".paid"
+            manifestPlaceholders.appName = "@string/app_name_paid"
+        }
     }
 
     buildFeatures {
@@ -46,29 +80,56 @@ abstract class AddCurrentDateTask extends DefaultTask {
     }
 }
 
-androidComponents {
-    onVariants(selector().all(), { variant ->
-        TaskProvider addCurrentDateTask = project.tasks.register(
-                variant.getName() + "AddCurrentDateTask",
-                AddCurrentDateTask.class
-        ) {
-            buildType.set(variant.getBuildType())
-            buildFlavor.set(variant.getFlavorName())
+class AddCurrentDatePlugin implements Plugin<Project> {
+    @Override
+    void apply(Project target) {
+        target.androidComponents {
+            onVariants(selector().all(), { variant ->
+                TaskProvider addCurrentDateTask = target.tasks.register(
+                        variant.getName() + "AddCurrentDateTask",
+                        AddCurrentDateTask.class
+                ) {
+                    buildType.set(variant.getBuildType())
+                    buildFlavor.set(variant.getFlavorName())
+                }
+
+                String capitalizedVariantName = variant.getName()
+                        .substring(0, 1)
+                        .toUpperCase()
+                        .concat(variant.getName().substring(1))
+
+                String assembleTaskName = "assemble$capitalizedVariantName"
+
+                target.tasks.matching { it.name == assembleTaskName }.configureEach {
+                    finalizedBy(addCurrentDateTask)
+                }
+            })
         }
-
-        String capitalizedVariantName = variant.getName()
-                .substring(0, 1)
-                .toUpperCase()
-                .concat(variant.getName().substring(1))
-
-        String assembleTaskName = "assemble$capitalizedVariantName"
-
-        project.tasks.matching { it.name == assembleTaskName }.configureEach {
-            finalizedBy(addCurrentDateTask)
-        }
-    })
+    }
 }
 
+//androidComponents {
+//    onVariants(selector().all(), { variant ->
+//        TaskProvider addCurrentDateTask = project.tasks.register(
+//                variant.getName() + "AddCurrentDateTask",
+//                AddCurrentDateTask.class
+//        ) {
+//            buildType.set(variant.getBuildType())
+//            buildFlavor.set(variant.getFlavorName())
+//        }
+//
+//        String capitalizedVariantName = variant.getName()
+//                .substring(0, 1)
+//                .toUpperCase()
+//                .concat(variant.getName().substring(1))
+//
+//        String assembleTaskName = "assemble$capitalizedVariantName"
+//
+//        project.tasks.matching { it.name == assembleTaskName }.configureEach {
+//            finalizedBy(addCurrentDateTask)
+//        }
+//    })
+//}
 
 dependencies {
     implementation fileTree(include: ["*.jar"], dir: "libs")
