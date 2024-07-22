@@ -35,6 +35,8 @@
 package com.kodeco.socializify
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.kodeco.socializify.databinding.ActivityProfileBinding
 import com.squareup.picasso.Picasso
@@ -47,6 +49,7 @@ class ProfileActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     binding = ActivityProfileBinding.inflate(layoutInflater)
     setContentView(binding.root)
+
     loadAvatar()
   }
 

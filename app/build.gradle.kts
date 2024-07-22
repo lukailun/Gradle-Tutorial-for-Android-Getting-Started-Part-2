@@ -30,6 +30,5 @@ dependencies {
     implementation(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(libs.bundles.navigation)
     implementation(libs.picasso)
 }

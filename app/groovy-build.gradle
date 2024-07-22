@@ -28,6 +28,5 @@ dependencies {
     implementation fileTree(include: ["*.jar"], dir: "libs")
     implementation libs.appcompat
     implementation libs.material
-    implementation libs.bundles.navigation
     implementation libs.picasso
 }
