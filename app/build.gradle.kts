@@ -17,6 +17,36 @@ android {
         versionName = libs.versions.versionName.get()
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("path to your keystore file")
+            storePassword = "your store password"
+            keyAlias = "your key alias"
+            keyPassword = "your key password"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName("release")
+        }
+        debug { }
+    }
+
+    flavorDimensions.add("appMode")
+    productFlavors {
+        create("free") {
+            dimension = "appMode"
+            applicationIdSuffix = ".free"
+            manifestPlaceholders["appName"] = "@string/app_name_free"
+        }
+        create("paid") {
+            dimension = "appMode"
+            applicationIdSuffix = ".paid"
+            manifestPlaceholders["appName"] = "@string/app_name_paid"
+        }
+    }
+
     buildFeatures {
         viewBinding = true
     }
