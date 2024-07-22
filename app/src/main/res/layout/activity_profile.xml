@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/no_avatar"
+                android:textColor="@android:color/white"
+                app:layout_collapseMode="parallax" />
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                app:layout_collapseMode="parallax" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:title="Jane Doe" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="56dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/followers"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView"
+                            android:text="@string/followers" />
+
+                        <TextView
+                            style="@style/TextView"
+                            android:text="6, 785" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/followers"
+                        style="@style/Icon"
+                        android:background="@drawable/ic_people" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_default">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/following"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextView"
+                            android:text="@string/following" />
+
+                        <TextView
+                            style="@style/TextView"
+                            android:text="2, 568" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/following"
+                        style="@style/Icon"
+                        android:background="@drawable/ic_people_outline" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/TextView"
+                android:layout_margin="@dimen/margin_default"
+                android:text="@string/recent_photos"
+                android:textSize="18sp" />
+
+            <ImageView
+                style="@style/Image"
+                android:background="@drawable/norway" />
+
+            <ImageView
+                style="@style/Image"
+                android:background="@drawable/finland" />
+
+            <TextView
+                android:id="@+id/restriction"
+                style="@style/TextView"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/margin_default"
+                android:gravity="center"
+                android:text="@string/restriction"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/extraPhotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    style="@style/Image"
+                    android:background="@drawable/switzerland" />
+
+                <ImageView
+                    style="@style/Image"
+                    android:background="@drawable/bolivia" />
+
+                <ImageView
+                    style="@style/Image"
+                    android:background="@drawable/chile" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
+        app:menu="@menu/navigation" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

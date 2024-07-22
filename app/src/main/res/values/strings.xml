@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Socializify</string>
+    <string name="no_avatar">No avatar</string>
+    <string name="menu_feed">Feed</string>
+    <string name="menu_messages">Messages</string>
+    <string name="menu_settings">Settings</string>
+    <string name="location">Location</string>
+    <string name="nyc">USA, NYC</string>
+    <string name="following">Following</string>
+    <string name="followers">Followers</string>
+    <string name="recent_photos">Recent photos</string>
+    <string name="restriction">More photos are available in the premium application</string>
+</resources>

@@ -1,0 +1,23 @@
+buildscript {
+    ext {
+        compileSdk = 34
+        minSdk = 23
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+        kotlin = "1.9.20"
+        agp = "8.2.2"
+        picasso = "2.8"
+        appcompat = "1.6.1"
+        material = "1.11.0"
+    }
+}
+
+plugins {
+    id "com.android.application" version "$agp" apply false
+    id "org.jetbrains.kotlin.android" version "$kotlin" apply false
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.buildDir
+}
